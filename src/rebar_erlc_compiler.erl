@@ -555,6 +555,10 @@ internal_erl_compile(Opts, Dir, Module, OutDir, ErlOpts, RebarOpts) ->
                     || Src <- rebar_dir:all_src_dirs(RebarOpts, ["src"], [])],
     AllOpts = [{outdir, filename:dirname(Target)}] ++ ErlOpts ++ PrivIncludes ++
               [{i, filename:join(Dir, "include")}, {i, Dir}, return],
+    % set cwd to module dir, cause we have a security problem, full file path!!
+    {ok,CwdDir} = file:get_cwd(),
+    ok = file:set_cwd(filename:dirname(Module)),
+    try
     case compile:file(Module, AllOpts) of
         {ok, _Mod} ->
             ok;
@@ -563,6 +567,9 @@ internal_erl_compile(Opts, Dir, Module, OutDir, ErlOpts, RebarOpts) ->
             rebar_base_compiler:ok_tuple(Module, FormattedWs);
         {error, Es, Ws} ->
             error_tuple(Module, Es, Ws, AllOpts, Opts)
+    end
+    after
+    ok = file:set_cwd(CwdDir)
     end.
 
 error_tuple(Module, Es, Ws, AllOpts, Opts) ->

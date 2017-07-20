@@ -270,7 +270,7 @@ log_level() ->
 -spec version() -> ok.
 version() ->
     {ok, Vsn} = application:get_key(rebar, vsn),
-    ?CONSOLE("rebar ~s on Erlang/OTP ~s Erts ~s",
+    ?CONSOLE("rebar ~s on Erlang/OTP ~s Erts ~s forked obi458",
              [Vsn, erlang:system_info(otp_release), erlang:system_info(version)]).
 
 %% @private set global flag based on getopt option boolean value
