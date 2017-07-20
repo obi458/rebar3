@@ -558,8 +558,11 @@ internal_erl_compile(Opts, Dir, Module, OutDir, ErlOpts, RebarOpts) ->
     % set cwd to module dir, cause we have a security problem, full file path!!
     {ok,CwdDir} = file:get_cwd(),
     ok = file:set_cwd(filename:dirname(Module)),
+    %io:format("Changing dir to ~p~n",[file:get_cwd()]),
     try
-    case compile:file(Module, AllOpts) of
+        %io:format("Module is ~p~n",[filename:basename(Module)]),
+    %case compile:file(Module, AllOpts) of
+    case compile:file(filename:basename(Module), AllOpts) of
         {ok, _Mod} ->
             ok;
         {ok, _Mod, Ws} ->
